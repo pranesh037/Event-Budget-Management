@@ -30,51 +30,7 @@ const isValidEmail = (email) => {
 // ----------------------------------------------------
 
 /**
- * 1. Admin Create Account (Register)
- */
-app.post('/api/admin/register', async (req, res) => {
-  try {
-    const { name, email, password, confirmPassword } = req.body;
-
-    if (!name || !name.trim()) {
-      return res.status(400).json({ success: false, message: 'Admin Name is required.' });
-    }
-    if (!email || !email.trim() || !isValidEmail(email)) {
-      return res.status(400).json({ success: false, message: 'Please enter a valid Admin Email ID.' });
-    }
-    if (!password || password.length < 6) {
-      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
-    }
-    if (password !== confirmPassword) {
-      return res.status(400).json({ success: false, message: 'Password and Confirm Password do not match.' });
-    }
-
-    // Check if email already registered
-    const existingAdmin = getAdminByEmail(email);
-    if (existingAdmin) {
-      return res.status(400).json({ success: false, message: 'An Admin account with this email ID already exists.' });
-    }
-
-    // Hash password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Save Admin
-    const newAdmin = createAdmin(name.trim(), email.trim().toLowerCase(), hashedPassword);
-
-    return res.status(201).json({
-      success: true,
-      message: 'Admin account created successfully! Please log in with your credentials.',
-      admin: { id: newAdmin.id, name: newAdmin.name, email: newAdmin.email }
-    });
-  } catch (error) {
-    console.error('Error in /api/admin/register:', error);
-    return res.status(500).json({ success: false, message: 'Server error during admin registration.' });
-  }
-});
-
-/**
- * 2. Admin Login
+ * Admin Login
  */
 app.post('/api/admin/login', async (req, res) => {
   try {

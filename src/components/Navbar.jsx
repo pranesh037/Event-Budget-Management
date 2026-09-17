@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, ShieldCheck, UserPlus, UserCheck, LayoutDashboard, LogOut } from 'lucide-react';
+import { Building2, ShieldCheck, UserCheck, LayoutDashboard, LogOut } from 'lucide-react';
 
 export default function Navbar({ currentView, setCurrentView, currentUser, onLogout }) {
   return (
@@ -33,13 +33,6 @@ export default function Navbar({ currentView, setCurrentView, currentUser, onLog
           </>
         ) : (
           <>
-            <button
-              className={`nav-btn ${currentView === 'admin-register' ? 'active' : ''}`}
-              onClick={() => setCurrentView('admin-register')}
-            >
-              <UserPlus size={16} /> Admin Create Account
-            </button>
-
             <button
               className={`nav-btn ${currentView === 'admin-login' ? 'active' : ''}`}
               onClick={() => setCurrentView('admin-login')}

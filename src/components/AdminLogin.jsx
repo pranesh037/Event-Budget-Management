@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
 
-export default function AdminLogin({ onLoginSuccess, onNavigateToRegister, initialEmail = '' }) {
+export default function AdminLogin({ onLoginSuccess, initialEmail = '' }) {
   const [formData, setFormData] = useState({
     email: initialEmail,
     password: ''
@@ -141,13 +141,6 @@ export default function AdminLogin({ onLoginSuccess, onNavigateToRegister, initi
           )}
         </button>
       </form>
-
-      <div className="card-footer">
-        Don't have an Admin account?{' '}
-        <span className="card-footer-link" onClick={onNavigateToRegister}>
-          Create Account
-        </span>
-      </div>
     </div>
   );
 }

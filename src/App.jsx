@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import AdminRegister from './components/AdminRegister';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import FacultyLogin from './components/FacultyLogin';
 import FacultyDashboard from './components/FacultyDashboard';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('admin-register'); // Default start view
+  const [currentView, setCurrentView] = useState('admin-login'); // Default start view
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('budget_token') || '');
-  const [registeredEmail, setRegisteredEmail] = useState('');
 
   // Auto-restore login session if token exists
   useEffect(() => {
@@ -33,11 +31,6 @@ export default function App() {
     }
   }, []);
 
-  const handleAdminRegisterSuccess = (email) => {
-    setRegisteredEmail(email);
-    setCurrentView('admin-login');
-  };
-
   const handleLoginSuccess = (userData, userToken) => {
     setCurrentUser(userData);
     setToken(userToken);
@@ -59,20 +52,10 @@ export default function App() {
   // Guard protected views
   const renderCurrentView = () => {
     switch (currentView) {
-      case 'admin-register':
-        return (
-          <AdminRegister
-            onNavigateToLogin={() => setCurrentView('admin-login')}
-            onRegisterSuccess={handleAdminRegisterSuccess}
-          />
-        );
-
       case 'admin-login':
         return (
           <AdminLogin
-            initialEmail={registeredEmail}
             onLoginSuccess={handleLoginSuccess}
-            onNavigateToRegister={() => setCurrentView('admin-register')}
           />
         );
 
@@ -81,7 +64,6 @@ export default function App() {
           return (
             <AdminLogin
               onLoginSuccess={handleLoginSuccess}
-              onNavigateToRegister={() => setCurrentView('admin-register')}
             />
           );
         }
@@ -113,9 +95,8 @@ export default function App() {
 
       default:
         return (
-          <AdminRegister
-            onNavigateToLogin={() => setCurrentView('admin-login')}
-            onRegisterSuccess={handleAdminRegisterSuccess}
+          <AdminLogin
+            onLoginSuccess={handleLoginSuccess}
           />
         );
     }

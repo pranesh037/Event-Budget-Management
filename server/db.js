@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const dbPath = path.join(__dirname, 'database.sqlite');
 const db = new Database(dbPath);
@@ -43,6 +44,25 @@ const createAdmin = (name, email, hashedPassword) => {
   return { id: info.lastInsertRowid, name, email };
 };
 
+// Seed default admin account
+const seedDefaultAdmin = () => {
+  const adminEmail = 'admin@kongu.edu';
+  const adminPass = 'admin@123';
+  const existingAdmin = getAdminByEmail(adminEmail);
+  const hashedPassword = bcrypt.hashSync(adminPass, 10);
+
+  if (!existingAdmin) {
+    db.prepare('INSERT INTO admins (name, email, password) VALUES (?, LOWER(?), ?)').run('Administrator', adminEmail, hashedPassword);
+  } else {
+    const matches = bcrypt.compareSync(adminPass, existingAdmin.password);
+    if (!matches) {
+      db.prepare('UPDATE admins SET password = ? WHERE LOWER(email) = LOWER(?)').run(hashedPassword, adminEmail);
+    }
+  }
+};
+
+seedDefaultAdmin();
+
 // Faculty DB queries
 const getFacultyByEmail = (email) => {
   const stmt = db.prepare('SELECT * FROM faculty WHERE LOWER(email) = LOWER(?)');
@@ -69,3 +89,4 @@ module.exports = {
   addFaculty,
   getAllFaculty
 };
+
